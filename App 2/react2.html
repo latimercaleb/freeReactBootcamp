@@ -10,40 +10,60 @@
   <div id='app'></div>
 
   <script type='text/babel'>
-  // Functional Component
-    function FriendsList (props) {
-      return (
-         <div>
-            <h2>Friends</h2>
-            <ul>
-             {props.list.map((name) => (
-                <li key={name}>
-                 <span>{name}</span>
-                 <button onClick={() => props.onDeactivateFriend(name)}>Deactivate</button>
-                 <button onClick={() => props.onRemoveFriend(name)}>Remove</button>
-                </li>
-             ))}
-            </ul>
-            <h2>Bad Friends</h2>
-            <ul>
-            {props.naughtyList.map((name) => (
-                  <li key={name}>
-                        <span>{name}</span>
-                        <button onClick={() => props.onActivateFriend(name)}>Activate</button>
-                        <button onClick={() => props.onRemoveFriend(name)}>Remove</button>
-                  </li>
-            ))}
-            </ul>
-       </div>
-      )
-    }
+  // Functional Components
+  function GoodFriends(props){
+        return(
+             <div>
+                  <h2>Good Friends</h2>
+                  <ul>
+                   {props.list.map((friend) => (
+                      <li key={friend.name}>
+                       <span>{friend.name}</span>
+                       <button onClick={() => props.onChangeFriend(friend.name)}>Deactivate</button>
+                       <button onClick={() => props.onRemoveFriend(friend.name)}>Remove</button>
+                      </li>
+                   ))}
+                  </ul>
+             </div>
+       )
+ }
+
+ function BadFriends(props){
+      return(
+            <div>
+                 <h2>Bad Friends</h2>
+                 <ul>
+                 {props.list.map((friend) => (
+                       <li key={friend.name}>
+                             <span>{friend.name}</span>
+                             <button onClick={() => props.onChangeFriend(friend.name)}>Activate</button>
+
+                       </li>
+                 ))}
+                 </ul>
+            </div>
+     )
+}
 
 // class component
     class App extends React.Component {
       constructor(props) {
         super(props)
         this.state = {
-          friends: ['Jordyn', 'Mikenzi', 'Jake'],
+          friends: [
+                {
+                      name: 'Ash',
+                      active:  true
+                },
+                {
+                      name: 'Pra',
+                      active: true
+                },
+                {
+                      name: 'Liz',
+                      active: false
+                }
+          ], // Could add an alternative property here....
           badFriends:[],
           input: '',
         }
@@ -51,16 +71,19 @@
         this.handleRemoveFriend = this.handleRemoveFriend.bind(this)
         this.updateInput = this.updateInput.bind(this)
         this.handleAddFriend = this.handleAddFriend.bind(this)
-        this.handleDeactivateFriend = this.handleDeactivateFriend.bind(this)
+
         this.handleDeleteAll = this.handleDeleteAll.bind(this)
-        this.handleActivateFriend = this.handleActivateFriend.bind(this)
+        this.handleChangeFriend = this.handleChangeFriend.bind(this)
       }
 
       handleAddFriend() {
               if(this.state.input != ''){
                   this.setState((currentState) => {
                       return {
-                           friends: currentState.friends.concat([this.state.input]),
+                           friends: currentState.friends.concat([{
+                                 name: currentState.input,
+                                 active: true
+                           }]),
                            input: ''
                     }
               })
@@ -70,27 +93,21 @@
       handleRemoveFriend(name) {
         this.setState((currentState) => {
           return {
-            friends: currentState.friends.filter((friend) => friend !== name)
+            friends: currentState.friends.filter((friend) => friend.name !== name)
           }
         })
       }
 
-      handleActivateFriend(name){
+      handleChangeFriend(name){
             this.setState((currentState)=>{
+                  let newGoodFriend = currentState.friends.find((friend) => friend.name === name)
                   return{
-                  friends: currentState.badFriends.concat(name) ,
-                  badFriends: currentState.friends.filter((friend) => friend !== name)
-            }
-            });
-      }
-
-      handleDeactivateFriend(name){
-            this.setState((currentState)=>{
-                  let friend = currentState.friends.find((friend) => friend === name)
-                  console.log(friend)
-                  return{
-                  friends: currentState.friends.filter((friend) => friend !== name),
-                  badFriends: currentState.badFriends.concat(friend)
+                  friends: currentState.friends.filter((friend) => friend.name !== name).concat([
+                        {
+                        name,
+                        active: !newGoodFriend.active
+                  }
+            ])
             }
             });
       }
@@ -127,12 +144,14 @@
             Clear List
             </button>
 
-            <FriendsList
-              list={this.state.friends}
-              naughtyList = {this.state.badFriends}
-              onActivateFriend = {this.handleActivateFriend}
-              onDeactivateFriend = {this.handleDeactivateFriend}
-              onRemoveFriend={this.handleRemoveFriend}
+            <GoodFriends
+            onRemoveFriend = {this.handleRemoveFriend}
+            onChangeFriend = {this.handleChangeFriend}
+              list={this.state.friends.filter((friend) => friend.active === true)}
+            />
+            <BadFriends
+            onChangeFriend = {this.handleChangeFriend}
+            list={this.state.friends.filter((friend) => friend.active === false)}
             />
 
           </div>
