@@ -63,17 +63,15 @@
                       name: 'Liz',
                       active: false
                 }
-          ], // Could add an alternative property here....
-          badFriends:[],
+          ],
           input: '',
         }
 
-        this.handleRemoveFriend = this.handleRemoveFriend.bind(this)
-        this.updateInput = this.updateInput.bind(this)
         this.handleAddFriend = this.handleAddFriend.bind(this)
-
-        this.handleDeleteAll = this.handleDeleteAll.bind(this)
+        this.handleRemoveFriend = this.handleRemoveFriend.bind(this)
         this.handleChangeFriend = this.handleChangeFriend.bind(this)
+        this.handleDeleteAll = this.handleDeleteAll.bind(this)
+        this.updateInput = this.updateInput.bind(this)
       }
 
       handleAddFriend() {
@@ -87,7 +85,7 @@
                            input: ''
                     }
               })
- }
+           }
       }
 
       handleRemoveFriend(name) {
