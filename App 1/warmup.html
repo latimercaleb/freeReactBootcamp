@@ -1,0 +1,47 @@
+<div id='app'></div>
+<!--Needed for react code-->
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<!--Needed for react dom traversal-->
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+<script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+
+<script type="text/babel">
+  console.log('Test React', window.React)
+  const name = "Callat"
+  const handle = "@latimeks"
+  // create a react element
+
+  const headerElem = React.createElement(
+    'h1',
+    null,
+    name)
+
+  const handleElem = React.createElement(
+      'h3',
+      null,
+      handle
+    )
+
+  const wrapperElem = React.createElement(
+      'div',
+      {id: 'container'},
+      headerElem,
+      handleElem
+    )
+
+  console.log(wrapperElem);
+  // render element to the dom
+  ReactDOM.render(wrapperElem, document.getElementById('app'))
+ // create components and use jsx
+
+function FirstComponent(props){
+  return <h1>{props.name}</h1>
+}
+
+function TestJSX(){
+  return (<FirstComponent name={name}/>)
+}
+
+ReactDOM.render(<TestJSX />, document.getElementById('app'))
+</script>
